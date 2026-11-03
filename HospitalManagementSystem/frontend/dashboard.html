@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — MediTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">Overview</span>
+        <h1 id="greeting">Dashboard</h1>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="stat-grid">
+      <!-- filled by dashboard.js -->
+    </div>
+
+    <div class="card card-pad" style="margin-bottom:26px;">
+      <h3 style="margin-bottom:14px;">Appointments by status</h3>
+      <div id="status-breakdown" style="display:flex; gap:28px; flex-wrap:wrap;"></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="card card-pad chart-card">
+        <div class="chart-title">Appointments — last 7 days</div>
+        <canvas id="chart-trend"></canvas>
+      </div>
+      <div class="card card-pad chart-card">
+        <div class="chart-title">Busiest doctors</div>
+        <canvas id="chart-doctors"></canvas>
+      </div>
+      <div class="card card-pad chart-card">
+        <div class="chart-title">Load by department</div>
+        <canvas id="chart-departments"></canvas>
+      </div>
+      <div class="card card-pad chart-card">
+        <div class="chart-title">Patients by gender</div>
+        <canvas id="chart-gender"></canvas>
+      </div>
+      <div class="card card-pad chart-card">
+        <div class="chart-title">Peak hours</div>
+        <canvas id="chart-hours"></canvas>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

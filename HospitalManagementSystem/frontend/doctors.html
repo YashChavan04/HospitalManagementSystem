@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctors — MediTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">Clinical staff</span>
+        <h1>Doctors</h1>
+      </div>
+      <button class="btn btn-primary role-gated" data-role="ADMIN" onclick="openCreateModal()">+ New doctor</button>
+    </div>
+
+    <div class="toolbar">
+      <select id="filter-department">
+        <option value="">All departments</option>
+      </select>
+      <input type="text" id="filter-specialization" placeholder="Search specialization…">
+      <div class="spacer"></div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Specialization</th>
+              <th>Department</th>
+              <th>Contact</th>
+              <th>Fee</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="doctor-rows"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <h3>No doctors found</h3>
+        <p>Try a different filter, or add a new doctor.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="doctor-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">New doctor</h3>
+      <button class="modal-close" onclick="closeModal('doctor-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="doctor-form">
+        <input type="hidden" id="doc-id">
+        <div class="field">
+          <label for="doc-name">Full name</label>
+          <input type="text" id="doc-name" required placeholder="Dr. Asha Mehta">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="doc-email">Email</label>
+            <input type="email" id="doc-email" placeholder="asha.mehta@meditrack.com">
+          </div>
+          <div class="field">
+            <label for="doc-phone">Phone</label>
+            <input type="text" id="doc-phone" placeholder="+91 90000 00000">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="doc-specialization">Specialization</label>
+            <input type="text" id="doc-specialization" required placeholder="Cardiologist">
+          </div>
+          <div class="field">
+            <label for="doc-qualification">Qualification</label>
+            <input type="text" id="doc-qualification" placeholder="MBBS, MD">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="doc-fee">Consultation fee (₹)</label>
+            <input type="number" id="doc-fee" min="0" step="1" placeholder="500">
+          </div>
+          <div class="field">
+            <label for="doc-department">Department</label>
+            <select id="doc-department" required></select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save doctor</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/doctors.js"></script>
+</body>
+</html>

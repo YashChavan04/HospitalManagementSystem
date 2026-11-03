@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patients — MediTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">Patient registry</span>
+        <h1>Patients</h1>
+      </div>
+      <button class="btn btn-primary role-gated" data-roles="ADMIN,RECEPTIONIST" onclick="openCreateModal()">+ New patient</button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="filter-name" placeholder="Search by name…">
+      <div class="spacer"></div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age / Gender</th>
+              <th>Blood group</th>
+              <th>Contact</th>
+              <th>Address</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patient-rows"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <h3>No patients found</h3>
+        <p>Register a new patient to get started.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="patient-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">New patient</h3>
+      <button class="modal-close" onclick="closeModal('patient-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="patient-form">
+        <input type="hidden" id="pat-id">
+        <div class="field">
+          <label for="pat-name">Full name</label>
+          <input type="text" id="pat-name" required placeholder="Ramesh Kulkarni">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="pat-age">Age</label>
+            <input type="number" id="pat-age" min="0" required placeholder="34">
+          </div>
+          <div class="field">
+            <label for="pat-gender">Gender</label>
+            <select id="pat-gender">
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="pat-phone">Phone</label>
+            <input type="text" id="pat-phone" placeholder="+91 90000 00000">
+          </div>
+          <div class="field">
+            <label for="pat-bloodgroup">Blood group</label>
+            <input type="text" id="pat-bloodgroup" placeholder="O+">
+          </div>
+        </div>
+        <div class="field">
+          <label for="pat-email">Email</label>
+          <input type="email" id="pat-email" placeholder="ramesh@example.com">
+        </div>
+        <div class="field">
+          <label for="pat-address">Address</label>
+          <textarea id="pat-address" rows="2" placeholder="Street, City"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save patient</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="history-modal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 id="history-title">Medical history</h3>
+      <button class="modal-close" onclick="closeModal('history-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="history-content">
+        <p style="color:var(--muted);">Loading…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/patients.js"></script>
+</body>
+</html>

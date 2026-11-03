@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Departments — MediTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">Facility structure</span>
+        <h1>Departments</h1>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateModal()">+ New department</button>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>Doctors</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="department-rows"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <h3>No departments yet</h3>
+        <p>Create your first department to start assigning doctors to it.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="department-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">New department</h3>
+      <button class="modal-close" onclick="closeModal('department-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="department-form">
+        <input type="hidden" id="dept-id">
+        <div class="field">
+          <label for="dept-name">Department name</label>
+          <input type="text" id="dept-name" required placeholder="Cardiology">
+        </div>
+        <div class="field">
+          <label for="dept-location">Location</label>
+          <input type="text" id="dept-location" placeholder="Block A, 2nd Floor">
+        </div>
+        <div class="field">
+          <label for="dept-description">Description</label>
+          <textarea id="dept-description" rows="3" placeholder="Short description of what this department handles"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save department</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/departments.js"></script>
+</body>
+</html>

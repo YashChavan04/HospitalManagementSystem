@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointments — MediTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">Scheduling</span>
+        <h1>Appointments</h1>
+      </div>
+      <button class="btn btn-primary role-gated" data-roles="ADMIN,RECEPTIONIST" onclick="openCreateModal()">+ Book appointment</button>
+    </div>
+
+    <div class="toolbar">
+      <select id="filter-status">
+        <option value="">All statuses</option>
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+      <input type="date" id="filter-date">
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear filters</button>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date &amp; time</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Reason</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="appointment-rows"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <h3>No appointments found</h3>
+        <p>Try a different filter, or book a new appointment.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="appointment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Book appointment</h3>
+      <button class="modal-close" onclick="closeModal('appointment-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-banner" id="appointment-error"></div>
+      <form id="appointment-form">
+        <div class="field">
+          <label for="apt-patient">Patient</label>
+          <select id="apt-patient" required></select>
+        </div>
+        <div class="field">
+          <label for="apt-doctor">Doctor</label>
+          <select id="apt-doctor" required></select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="apt-date">Date</label>
+            <input type="date" id="apt-date" required>
+          </div>
+          <div class="field">
+            <label for="apt-time">Time</label>
+            <input type="time" id="apt-time" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="apt-priority">Priority</label>
+          <select id="apt-priority">
+            <option value="ROUTINE">Routine</option>
+            <option value="URGENT">Urgent</option>
+            <option value="CRITICAL">Critical</option>
+          </select>
+          <div class="field-hint">Critical cases are shown first in the queue, regardless of booking time.</div>
+        </div>
+        <div class="field">
+          <label for="apt-reason">Reason for visit</label>
+          <textarea id="apt-reason" rows="2" placeholder="Follow-up consultation, chest pain, routine check-up…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Confirm booking</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="status-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Update appointment</h3>
+      <button class="modal-close" onclick="closeModal('status-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="status-form">
+        <input type="hidden" id="status-apt-id">
+        <div class="field">
+          <label for="status-value">Status</label>
+          <select id="status-value">
+            <option value="SCHEDULED">Scheduled</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="status-notes">Doctor's notes</label>
+          <textarea id="status-notes" rows="3" placeholder="Diagnosis, prescription, follow-up instructions…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="prescription-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>Prescription</h3>
+      <button class="modal-close" onclick="closeModal('prescription-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="prescription-form">
+        <input type="hidden" id="rx-appointment-id">
+        <div class="field">
+          <label>Medicines</label>
+          <div id="rx-med-rows"></div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="addMedRow()">+ Add medicine</button>
+        </div>
+        <div class="field">
+          <label for="rx-instructions">General instructions</label>
+          <textarea id="rx-instructions" rows="2" placeholder="Take with food. Avoid alcohol. Return if symptoms persist…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save prescription</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/appointments.js"></script>
+</body>
+</html>

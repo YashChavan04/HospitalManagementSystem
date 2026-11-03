@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediTrack — Sign in</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="login-shell">
+
+  <div class="login-brand-panel">
+    <div class="login-brand-top">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+        <rect width="24" height="24" rx="6" fill="#C97A2B"/>
+        <path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:1.15rem;color:#fff;font-weight:600;">MediTrack</div>
+        <div style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);">Hospital Management System</div>
+      </div>
+    </div>
+
+    <div>
+      <h1>One chart. Every department, doctor and visit in view.</h1>
+      <p class="tagline">Built for front-desk staff, doctors and administrators to manage patients, appointments and departments from a single record.</p>
+    </div>
+
+    <svg class="pulse-line" width="100%" height="60" viewBox="0 0 400 60" fill="none" style="position:relative;">
+      <path d="M0 30 H130 L150 8 L170 52 L190 30 H400" stroke="rgba(255,255,255,.35)" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="login-form-panel">
+    <div class="login-card">
+      <span class="eyebrow">Sign in</span>
+      <h2 style="margin-top:6px;">Welcome back</h2>
+      <p style="margin-bottom:22px;">Use your staff credentials to access the system.</p>
+
+      <div class="error-banner" id="error-banner"></div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" required autocomplete="username" placeholder="admin">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;" id="login-btn">Sign in</button>
+      </form>
+
+<!--      <div class="demo-creds">-->
+<!--        A default administrator account is created automatically the first time the backend starts.-->
+<!--        <span class="mono">username: admin &nbsp;·&nbsp; password: admin123</span>-->
+<!--      </div>-->
+
+      <p style="margin-top:18px; font-size:.85rem;">
+        Need a staff account? <a href="#" id="show-register" style="color:var(--primary); font-weight:600; text-decoration:none;">Register one here</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Register modal (ADMIN creates receptionist/doctor accounts in real use;
+     left open here for convenience while demoing the project) -->
+<div class="modal-backdrop" id="register-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create a staff account</h3>
+      <button class="modal-close" onclick="closeModal('register-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-banner" id="register-error"></div>
+      <form id="register-form">
+        <div class="field">
+          <label for="reg-username">Username</label>
+          <input type="text" id="reg-username" required>
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" required>
+        </div>
+        <div class="field">
+          <label for="reg-role">Role</label>
+          <select id="reg-role">
+            <option value="RECEPTIONIST">Receptionist</option>
+            <option value="DOCTOR">Doctor</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
+        <div class="field" id="reg-doctorid-field" style="display:none;">
+          <label for="reg-doctorid">Doctor ID (from the Doctors list)</label>
+          <input type="number" id="reg-doctorid" placeholder="e.g. 1">
+          <div class="field-hint">Links this login to an existing doctor profile so they only see their own appointments. Ask an admin to add the doctor first.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Create account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  // Already logged in? skip straight to the dashboard.
+  if (Auth.isLoggedIn() && !Auth.isExpired()) window.location.href = "dashboard.html";
+
+  // If we just got auto-logged-out (session expiry watcher, or a 401
+  // from an API call), show why instead of silently dumping the user
+  // back on the login screen.
+  const logoutReason = sessionStorage.getItem("hms_logout_reason");
+  if (logoutReason) {
+    sessionStorage.removeItem("hms_logout_reason");
+    const banner = document.getElementById("error-banner");
+    banner.textContent = logoutReason;
+    banner.classList.add("show");
+  }
+
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const banner = document.getElementById("error-banner");
+    banner.classList.remove("show");
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const btn = document.getElementById("login-btn");
+    btn.disabled = true;
+    btn.textContent = "Signing in…";
+
+    try {
+      const res = await AuthApi.login(username, password);
+      Auth.setSession(res);
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      banner.textContent = err.message || "Invalid username or password";
+      banner.classList.add("show");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Sign in";
+    }
+  });
+
+  document.getElementById("show-register").addEventListener("click", (e) => {
+    e.preventDefault();
+    openModal("register-modal");
+  });
+
+  document.getElementById("reg-role").addEventListener("change", (e) => {
+    document.getElementById("reg-doctorid-field").style.display =
+      e.target.value === "DOCTOR" ? "block" : "none";
+  });
+
+  document.getElementById("register-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const banner = document.getElementById("register-error");
+    banner.classList.remove("show");
+
+    const payload = {
+      username: document.getElementById("reg-username").value.trim(),
+      password: document.getElementById("reg-password").value,
+      role: document.getElementById("reg-role").value,
+      doctorId: document.getElementById("reg-doctorid").value
+        ? Number(document.getElementById("reg-doctorid").value)
+        : null
+    };
+
+    try {
+      await AuthApi.register(payload);
+      closeModal("register-modal");
+      toast("Account created — you can sign in now", "success");
+      document.getElementById("register-form").reset();
+    } catch (err) {
+      banner.textContent = err.message || "Could not create account";
+      banner.classList.add("show");
+    }
+  });
+</script>
+</body>
+</html>
